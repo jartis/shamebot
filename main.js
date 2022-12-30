@@ -1,7 +1,10 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 console.log(process.env);
-import { Client, GatewayIntentBits } from 'discord.js';
+import {
+    Client,
+    GatewayIntentBits
+} from 'discord.js';
 import fs from 'fs';
 
 const client = new Client({
@@ -30,23 +33,32 @@ client.once('ready', async () => {
     countChan = await client.channels.fetch(process.env.ENV_COUNTING_CHANNEL);
     countDisc = await client.channels.fetch(process.env.ENV_MESSAGE_CHANNEL);
 
-    const lastMessageCollection = await countChan.messages.fetch({ limit: 1 });
-    lastMessage = lastMessageCollection.first();
+    const lastMessageCollection = await countChan.messages.fetch({
+        limit: 1
+    });
+    // Hacky way to enforce starting from a blank channel:
+    // If there's no messages, make a fake message with a 0 value
+    if (lastMessageCollection.size == 0) {
+        lastMessage = {
+            content: '0',
+        };
+    } else {
+        lastMessage = lastMessageCollection.first();
+    }
 });
 
 client.on("messageCreate", async msg => {
     if (msg.author.bot) return;
     if (msg.channelId == countChan.id) {
-        if (!parseInt(msg.content)) {
+        if (!parseInt(msg.content)) { // Doesn't parse to integer
             msg.delete().then(() => {
                 let rand = Math.floor(Math.random() * (resMessages.notNum.length - 1));
                 countDisc.send(`${transformHeader(msg)}
                 ${resMessages.notNum[rand]}`);
             });
             return;
-        }
-        else {
-            if (lastMessage.author.username == msg.author.username) {
+        } else {
+            if (lastMessage.author.username == msg.author.username) { // Same user
                 msg.delete().then(() => {
                     let rand = Math.floor(Math.random() * (resMessages.sameAuthor.length - 1));
                     countDisc.send(`${transformHeader(msg)}
@@ -54,7 +66,7 @@ client.on("messageCreate", async msg => {
                 });
                 return;
             }
-            if (msg.content == parseInt(lastMessage.content)) {
+            if (msg.content == parseInt(lastMessage.content)) { // Number already taken
                 msg.delete().then(() => {
                     let rand = Math.floor(Math.random() * (resMessages.takenNum.length - 1));
                     countDisc.send(`${transformHeader(msg)}
@@ -62,14 +74,14 @@ client.on("messageCreate", async msg => {
                 });
                 return;
             }
-            if (msg.content[0] == "0") {
+            if (msg.content[0] == "0") { // Leading zero / hex attempt
                 msg.delete().then(() => {
                     let rand = Math.floor(Math.random() * (resMessages.leadingZero.length - 1));
                     countDisc.send(`${transformHeader(msg)} ${resMessages.leadingZero[rand]}`);
                 });
                 return;
             }
-            if (msg.content != (parseInt(lastMessage.content) + 1)) {
+            if (msg.content != (parseInt(lastMessage.content) + 1)) { // Wrong number
                 msg.delete().then(() => {
                     let rand = Math.floor(Math.random() * (resMessages.wrongNum.length - 1));
                     countDisc.send(`${transformHeader(msg)}
