@@ -1,6 +1,6 @@
-# fly.toml file generated for shamebot1 on 2022-11-16T18:02:43-05:00
+# fly.toml file generated for empty-fog-8397 on 2022-12-30T13:51:15-05:00
 
-app = "shamebot"
+app = "empty-fog-8397"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
