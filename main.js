@@ -38,13 +38,18 @@ client.once('ready', async () => {
     });
     // Hacky way to enforce starting from a blank channel:
     // If there's no messages, make a fake message with a 0 value
-    lastMessage = lastMessageCollection.first() || { content: '0' };
+    lastMessage = lastMessageCollection.first() || { 
+        content: '0',
+        author: {
+            username: 'Nobody',
+        },
+    };
 });
 
 client.on("messageCreate", async msg => {
     if (msg.author.bot) return;
     if (msg.channelId == countChan.id) {
-        if (!parseInt(msg.content)) { // Doesn't parse to integer
+        if (!Number.isInteger(parseInt(msg.content))) { // Doesn't parse to integer
             msg.delete().then(() => {
                 let rand = Math.floor(Math.random() * (resMessages.notNum.length - 1));
                 countDisc.send(`${transformHeader(msg)}
@@ -75,7 +80,7 @@ client.on("messageCreate", async msg => {
                 });
                 return;
             }
-            if (msg.content != (parseInt(lastMessage.content) + 1)) { // Wrong number
+            if (parseInt(msg.content) != (parseInt(lastMessage.content) + 1)) { // Wrong number
                 msg.delete().then(() => {
                     let rand = Math.floor(Math.random() * (resMessages.wrongNum.length - 1));
                     countDisc.send(`${transformHeader(msg)}
