@@ -38,13 +38,7 @@ client.once('ready', async () => {
     });
     // Hacky way to enforce starting from a blank channel:
     // If there's no messages, make a fake message with a 0 value
-    if (lastMessageCollection.size == 0) {
-        lastMessage = {
-            content: '0',
-        };
-    } else {
-        lastMessage = lastMessageCollection.first();
-    }
+    lastMessage = lastMessageCollection.first() || { content: '0' };
 });
 
 client.on("messageCreate", async msg => {
