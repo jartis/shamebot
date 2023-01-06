@@ -90,7 +90,7 @@ client.on("messageCreate", async msg => {
             }
 
             lastMessage = msg;
-            // msg.react('👌');
+            // msg.react('👍');
         }
     }
 });
