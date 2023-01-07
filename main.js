@@ -98,7 +98,7 @@ client.on("messageCreate", async msg => {
 client.on('messageUpdate', (oldMessage, newMessage) => {
     if (newMessage.channelId == countChan.id) {
         if (newMessage.content != oldMessage.content) {
-            newMessage.delete(); // for example
+            newMessage.content = oldMessage.content; // for example
         }
     }
 });
