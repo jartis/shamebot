@@ -38,7 +38,7 @@ client.once('ready', async () => {
     });
     // Hacky way to enforce starting from a blank channel:
     // If there's no messages, make a fake message with a 0 value
-    lastMessage = lastMessageCollection.first() || { 
+    lastMessage = lastMessageCollection.first() || {
         content: '0',
         author: {
             username: 'Nobody',
@@ -91,6 +91,14 @@ client.on("messageCreate", async msg => {
 
             lastMessage = msg;
             msg.react('👍');
+        }
+    }
+});
+
+client.on('messageUpdate', (oldMessage, newMessage) => {
+    if (newMessage.channelId == countChan.id) {
+        if (newMessage.content != oldMessage.content) {
+            newMessage.delete(); // for example
         }
     }
 });
