@@ -98,7 +98,10 @@ client.on("messageCreate", async msg => {
 client.on('messageUpdate', (oldMessage, newMessage) => {
     if (newMessage.channelId == countChan.id) {
         if (newMessage.content != oldMessage.content) {
-            newMessage.content = oldMessage.content; // for example
+            let rand = Math.floor(Math.random() * (resMessages.notNum.length - 1));
+            countDisc.send(`${transformHeader(oldMessage)}
+                ${resMessages.notNum[rand]}`);
+            newMessage.delete(); // for example
         }
     }
 });

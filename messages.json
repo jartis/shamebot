@@ -35,6 +35,11 @@
         "leadingZero": [
             "\nTry again without a leading zero :D",
             "\nNo hex codes allowed, sorry!"
+        ], 
+        "editMessage": [
+            "\nYou cannot change the past!",
+            "\nThat's not what you said the first time!",
+            "\nUnstable number detected! Deleting..."
         ]
     }
 }
